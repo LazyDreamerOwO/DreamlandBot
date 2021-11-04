@@ -23,7 +23,7 @@ async def on_message(message):
     elif message.mentions is discord.User:
         process_user_mention(message, message.mentions)
 
-    if user_message == 'hello':
+    elif user_message == 'hello':
         await message.reply(f'Hello {username}!', mention_author=True)
         return
     elif user_message == 'bye':
@@ -32,7 +32,7 @@ async def on_message(message):
     else:
         await bot.process_commands(message)
 
-def process_user_mention(message, user: discord.User):
+async def process_user_mention(message, user):
     """Process message with mention of single user"""
     if message.content.startswith("!bonk"):
         author = str(message.author).split('#')[0]
