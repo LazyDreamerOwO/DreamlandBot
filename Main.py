@@ -1,12 +1,8 @@
 import os, random
 from dotenv import load_dotenv
-import discord
 from discord.ext import commands
 
 load_dotenv(".env")
-
-intents = discord.Intents.default()
-intent.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
@@ -31,6 +27,9 @@ async def on_message(message):
         elif user_message == 'bye':
             await message.channel.send(f'Goodbye {username}!')
             return
+
+    else:
+        await bot.process_commands(message)
 
 @bot.command(name="dice")
 async def dice(ctx, sides: int):
