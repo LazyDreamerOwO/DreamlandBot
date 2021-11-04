@@ -9,8 +9,38 @@ bot = commands.Bot(command_prefix='!')
 
 @bot.event
 async def on_ready():
-    bot.
     print('We have logged in as {0.user}'.format(bot))
+
+@bot.command()
+async def dice(ctx, sides: int = 6):
+    """Roll single dice with N sides"""
+    sides = max(sides, 2)
+    await ctx.send(f"You rolled a {random.randint(1, sides)} on a {sides} sided dice!")
+
+# todo make global registry of such commands to mimic @bot.command interface
+async def info(message):
+    """Specifies probability of given event in message"""
+    # idea: make that random nonsense would be placed in message if no message is given
+    chance = random.choice(range(101))
+    if chance == 69:
+        await message.channel.send(f"9000% chance that {message.content}")
+    else:
+        await message.channel.send(f"{chance}% chance that {message.content}")
+
+async def process_text_command(message):
+    """Bypass parsing of args by Bot.command
+    Return true if message was consumed, otherwise false"""
+    if message.content.startswith("!info"):
+        info()
+        return True
+
+    return False
+
+async def process_user_mention_command(message, user: discord.User):
+    """Process message with mention of single user"""
+    if message.content.startswith("!bonk"):
+        author = str(message.author).split('#')[0]
+        await message.channel.send(f"{author} bonked {user.name}!")
 
 @bot.event
 async def on_message(message):
@@ -36,36 +66,5 @@ async def on_message(message):
         return
     else:
         await bot.process_commands(message)
-
-async def process_user_mention_command(message, user: discord.User):
-    """Process message with mention of single user"""
-    if message.content.startswith("!bonk"):
-        author = str(message.author).split('#')[0]
-        await message.channel.send(f"{author} bonked {user.name}!")
-
-async def process_text_command(message): bool =
-    """Bypass parsing of args by Bot.command
-    Return true if message was consumed, otherwise false"""
-    if message.content.startswith("!info"):
-        info()
-        return True
-
-    return False
-
-@bot.command()
-async def dice(ctx, sides: int = 6):
-    """Roll single dice with N sides"""
-    sides = max(sides, 2)
-    await ctx.send(f"You rolled a {random.randint(1, sides)} on a {sides} sided dice!")
-
-# todo make global registry of such commands to mimic @bot.command interface
-async def info(message):
-    """Specifies probability of given event in message"""
-    # idea: make that random nonsense would be placed in message if no message is given
-    chance = random.choice(range(101))
-    if chance == 69:
-        await message.channel.send(f"9000% chance that {message.content}")
-    else:
-        await message.channel.send(f"{chance}% chance that {message.content}")
 
 bot.run(os.environ.get("DiscordBotToken"))
