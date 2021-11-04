@@ -30,8 +30,9 @@ async def on_message(message):
         await bot.process_commands(message)
 
 @bot.command()
-async def dice(ctx, sides: int):
+async def dice(ctx, sides: int = 6):
     """Roll single dice with N sides"""
+    sides = max(sides, 2)
     await ctx.send(f"You rolled a {random.randint(1, sides)} on a {sides} sided dice!")
 
 bot.run(os.environ.get("DiscordBotToken"))
