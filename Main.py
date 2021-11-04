@@ -27,11 +27,11 @@ async def info(message):
     else:
         await message.channel.send(f"{chance}% chance that {message.content}")
 
-async def process_text_command(message):
+async def process_text_command(message) -> bool:
     """Bypass parsing of args by Bot.command
     Return true if message was consumed, otherwise false"""
     if message.content.startswith("!info"):
-        await info()
+        await info(message)
         return True
 
     return False
