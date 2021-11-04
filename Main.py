@@ -31,7 +31,7 @@ async def process_text_command(message):
     """Bypass parsing of args by Bot.command
     Return true if message was consumed, otherwise false"""
     if message.content.startswith("!info"):
-        info()
+        await info()
         return True
 
     return False
