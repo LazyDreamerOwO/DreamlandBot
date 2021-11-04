@@ -39,8 +39,9 @@ def process_user_mention(message, user: discord.User):
         await message.channel.send(f"{author} bonked {user.name}!")
 
 @bot.command()
-async def dice(ctx, sides: int):
+async def dice(ctx, sides: int = 6):
     """Roll single dice with N sides"""
+    sides = max(sides, 2)
     await ctx.send(f"You rolled a {random.randint(1, sides)} on a {sides} sided dice!")
 
 @bot.command()
