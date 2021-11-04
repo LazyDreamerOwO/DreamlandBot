@@ -1,5 +1,6 @@
 import os, random
 from dotenv import load_dotenv
+import discord
 from discord.ext import commands
 
 load_dotenv(".env")
@@ -32,7 +33,7 @@ async def on_message(message):
     else:
         await bot.process_commands(message)
 
-async def process_user_mention(message, user):
+async def process_user_mention(message, user: discord.User):
     """Process message with mention of single user"""
     if message.content.startswith("!bonk"):
         author = str(message.author).split('#')[0]
