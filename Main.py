@@ -13,26 +13,41 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     username = str(message.author).split('#')[0]
-    user_message = str(message.content)
+    user_message = message.content
     channel = str(message.channel.name)
     print(f'{username}: {user_message}: ({channel})')
 
     if message.author == bot.user:
         return
 
-    if message.channel.name == 'bot-test':
-        if user_message == 'hello':
-            await message.channel.send(f'Hello {username}!')
-            return
-        elif user_message == 'bye':
-            await message.channel.send(f'Goodbye {username}!')
-            return
-        else:
-            await bot.process_commands(message)
+    elif message.mentions is discord.User:
+        process_user_mention(message, message.mentions)
+
+    if user_message == 'hello':
+        await message.reply(f'Hello {username}!', mention_author=True)
+        return
+    elif user_message == 'bye':
+        await message.reply(f'Goodbye {username}!', mention_author=True)
+        return
+    else:
+        await bot.process_commands(message)
+
+def process_user_mention(message, user: discord.User):
+    """Process message with mention of single user"""
+    if message.content.startswith("!bonk"):
+        author = str(message.author).split('#')[0]
+        await message.channel.send(f"{author} bonked {user.name}!")
 
 @bot.command()
 async def dice(ctx, sides: int):
     """Roll single dice with N sides"""
     await ctx.send(f"You rolled a {random.randint(1, sides)} on a {sides} sided dice!")
+
+@bot.command()
+async def info(ctx, msg: str):
+    """Specifies probability of given event in message"""
+    # idea: make that random nonsense would be placed in message if no message is given
+    chance = random.choice(range(101))
+    await ctx.send(f"{chance}% chance that {msg}")
 
 bot.run(os.environ.get("DiscordBotToken"))
