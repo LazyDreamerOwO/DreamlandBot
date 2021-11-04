@@ -1,12 +1,13 @@
-import os
-import random
+import os, random
 from dotenv import load_dotenv
 from discord.ext import commands
 
 load_dotenv(".env")
 
-# client = discord.Client()
-bot = commands.Bot(command_prefix='!')
+intents = discord.Intents.default()
+intent.members = True
+
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 @bot.event
 async def on_ready():
