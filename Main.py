@@ -30,7 +30,7 @@ async def on_message(message):
             await message.channel.send(f'Goodbye {username}!')
             return
 
-@bot.command()
+@bot.command(name="dice")
 async def dice(ctx, sides: int):
     """Roll single dice with N sides"""
     await ctx.send(f"You rolled a {random.randint(1, sides)} on a {sides} sided dice!")
