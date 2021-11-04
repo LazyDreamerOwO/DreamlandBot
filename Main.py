@@ -31,8 +31,8 @@ async def on_message(message):
             return
 
 @bot.command()
-async def dice(sides : int):
-    """Adds two numbers together."""
-    await bot.say(f"You rolled a {random.randint(1, sides)} on a {sides} sided dice!")
+async def dice(ctx, sides: int):
+    """Roll single dice with N sides"""
+    await ctx.send(f"You rolled a {random.randint(1, sides)} on a {sides} sided dice!")
 
 bot.run(os.environ.get("DiscordBotToken"))
