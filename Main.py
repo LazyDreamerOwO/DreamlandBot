@@ -20,15 +20,14 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    if message.channel.name == 'bot-test':
-        if user_message == 'hello':
-            await message.channel.send(f'Hello {username}!')
-            return
-        elif user_message == 'bye':
-            await message.channel.send(f'Goodbye {username}!')
-            return
-        else:
-            await bot.process_commands(message)
+    if user_message == 'hello':
+        await message.channel.send(f'Hello {username}!')
+        return
+    elif user_message == 'bye':
+        await message.channel.send(f'Goodbye {username}!')
+        return
+    else:
+        await bot.process_commands(message)
 
 @bot.command()
 async def dice(ctx, sides: int):
