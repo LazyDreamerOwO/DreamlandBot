@@ -52,11 +52,12 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    elif process_text_command(message):
+    text_command_consumed = await process_text_command(message)
+    if text_command_consumed:
         return
 
     elif message.mentions is discord.User:
-        process_user_mention_command(message, message.mentions)
+        await process_user_mention_command(message, message.mentions)
 
     elif user_message == 'hello':
         await message.reply(f'Hello {username}!', mention_author=True)
