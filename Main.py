@@ -26,7 +26,7 @@ async def on_message(message):
         return
 
     elif message.mentions is discord.User:
-        process_user_mention(message, message.mentions)
+        process_user_mention_command(message, message.mentions)
 
     elif user_message == 'hello':
         await message.reply(f'Hello {username}!', mention_author=True)
