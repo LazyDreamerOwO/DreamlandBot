@@ -46,10 +46,11 @@ async def dice(ctx, sides: int = 6):
     await ctx.send(f"You rolled a {random.randint(1, sides)} on a {sides} sided dice!")
 
 @bot.command()
-async def info(ctx, msg: str):
+async def info(ctx, *words):
     """Specifies probability of given event in message"""
     # idea: make that random nonsense would be placed in message if no message is given
     chance = random.choice(range(101))
+    msg = " ".join(words)
     await ctx.send(f"{chance}% chance that {msg}")
 
 bot.run(os.environ.get("DiscordBotToken"))
