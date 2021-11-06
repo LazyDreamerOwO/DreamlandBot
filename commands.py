@@ -32,9 +32,28 @@ Restrictions:
     . Stack limit is 66560
     . Input limit is 66560, but discord will truncate it
 
-Debugging:
-|| After output is state of stack when program finished
+Switches:
+Usage: /termite A[-d ...] a <
+    -d  : Debug mode
+    -s  : Turn on stack step printing
+    -ns : Turn off stack step printing
+    -l  : Experimental -- Capture state of rewind and terminate program if stack is identical each time i.e. leads to infinite recursion
+    -h  : Output everything as hex
 ```"""
+
+def strip_discord_formatting(s: str) -> str:
+    result = s.strip()
+    if result.startswith("```") and result.endswith("```"):
+        l = 0
+        for ch in result:
+            if ch.isspace():
+                break
+            l += 1
+        result = result[l:-3]
+    elif result.startswith("`") and result.endswith("`"):
+        result = result[1:-1]
+    return result
+
 
 class TermiteCommands(commands.Cog):
     def __init__(self, bot):
@@ -44,15 +63,32 @@ class TermiteCommands(commands.Cog):
     async def termite(self, ctx, *args: str):
         # todo: ability to satisfy '>'
         code = " ".join(args)
+        code = strip_discord_formatting(code)
+        args = []
+        if code.startswith("A"):
+            list_open = code.find("[")
+            list_close = code.find("]")
+            if list_open != -1 and list_close != -1 and list_open < list_close:
+                args = code[list_open+1:list_close].split()
+                code = code[list_close+1:]
+                code = strip_discord_formatting(code)
+            else:
+                await ctx.send(f"```diff\ninvalid argument clause```")
+                return
         try:
-            output = subprocess.run(["termite.exe"], timeout=5.0,input=code, capture_output=True, text=True)
+            output = subprocess.run(["termite.exe", *args], timeout=5.0,input=code, capture_output=True, text=True)
             output_msg = str(output.stdout)
             if len(output_msg) > 1000:
-                output_msg = output_msg[0:1000] + "   ...truncated"
+                output_msg = output_msg[0:1000] + "<...truncated>"
             if output.returncode == 0:
-                await ctx.send(f"```bash\n{output_msg}```")
-            else:
+                if len(output_msg) == 0:
+                    await ctx.send(f"```\nno output```")
+                else:
+                    await ctx.send(f"```\n{output_msg}```")
+            elif output.returncode == 1:
                 await ctx.send(f"```diff\n{output_msg}```")
+            else:
+                await ctx.send(f"```diff\n!!! termite crashed, tochka, fix !!!```")
         except subprocess.TimeoutExpired:
             await ctx.send(f"```how dare you create infinite loops```")
 
