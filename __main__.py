@@ -15,7 +15,7 @@ def load_cogs(bot):
     importlib.reload(loaded)
     for attr in loaded.__dict__:
         obj = getattr(loaded, attr)
-        if issubclass(type(obj), commands.cog.CogMeta):
+        if isinstance(obj, commands.cog.CogMeta):
             print(f"-- {obj.__name__} cog was loaded")
             bot.add_cog(obj(bot))
 
